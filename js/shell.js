@@ -20,6 +20,7 @@ window.Shell = {
 
   /* ---------- 主题 ---------- */
   THEMES: [
+    { id: 'dream-white', icon: '☁️', name: '梦境灰白', desc: '冷调白灰，晨雾与星光的颜色' },
     { id: 'pink-heart', icon: '💗', name: '粉色爱心', desc: '甜甜的粉色，像心动的颜色' },
     { id: 'purple-star', icon: '🌌', name: '紫色星空', desc: '静谧的紫，梦境的颜色' },
     { id: 'mint-fresh', icon: '🌿', name: '薄荷清新', desc: '清爽的薄荷，元气满满' },
@@ -30,6 +31,7 @@ window.Shell = {
 
   themeGradient(id) {
     var map = {
+      'dream-white': 'linear-gradient(135deg,#f8f8fc,#dfe1ec)',
       'pink-heart': 'linear-gradient(135deg,#3d1030,#7d255c)',
       'purple-star': 'linear-gradient(135deg,#241343,#57226e)',
       'mint-fresh': 'linear-gradient(135deg,#0b2f3a,#1a5d6f)',
@@ -37,25 +39,25 @@ window.Shell = {
       'sunset-orange': 'linear-gradient(135deg,#42141a,#9c4522)',
       'aurora-green': 'linear-gradient(135deg,#093330,#187262)'
     };
-    return map[id] || map['pink-heart'];
+    return map[id] || map['dream-white'];
   },
 
   applyTheme() {
-    var t = Store.get('theme', 'pink-heart');
+    var t = Store.get('theme', 'dream-white');
     var ok = this.THEMES.some(function (x) { return x.id === t; });
-    var id = ok ? t : 'pink-heart';
+    var id = ok ? t : 'dream-white';
     document.body.setAttribute('data-theme', id);
     /* 状态栏颜色跟随主题（iOS/Android 系统状态栏） */
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
-      var map = { 'pink-heart': '#2b0e1f', 'purple-star': '#0f0a1e', 'mint-fresh': '#06222a', 'ocean-blue': '#04172e', 'sunset-orange': '#2e0a12', 'aurora-green': '#052020' };
-      meta.setAttribute('content', map[id] || '#2b0e1f');
+      var map = { 'dream-white': '#f8f8fc', 'pink-heart': '#2b0e1f', 'purple-star': '#0f0a1e', 'mint-fresh': '#06222a', 'ocean-blue': '#04172e', 'sunset-orange': '#2e0a12', 'aurora-green': '#052020' };
+      meta.setAttribute('content', map[id] || '#f8f8fc');
     }
   },
 
   themeModal() {
     var self = this;
-    var cur = Store.get('theme', 'pink-heart');
+    var cur = Store.get('theme', 'dream-white');
     window.Modal.show({
       title: '🎨 选择主题',
       body: '<p class="muted sm center">换一个喜欢的主题色，梦屿也会跟着变装哦</p>' +
@@ -70,7 +72,7 @@ window.Shell = {
             }).join('') + '</div>',
       footer: '<div class="modal-foot"><button class="btn ghost" data-m="cancel">关闭</button></div>',
       onMount: function (b, root) {
-        var c = Store.get('theme', 'pink-heart');
+        var c = Store.get('theme', 'dream-white');
         b.querySelectorAll('.place-card').forEach(function (card) {
           if (card.getAttribute('data-t') === c) card.classList.add('sel');
           card.onclick = function () {
@@ -94,7 +96,7 @@ window.Shell = {
   renderThemeStrip() {
     var el = document.getElementById('themeStrip');
     if (!el) return;
-    var cur = Store.get('theme', 'pink-heart');
+    var cur = Store.get('theme', 'dream-white');
     el.innerHTML = this.THEMES.map(function (t) {
       return '<button class="theme-dot' + (t.id === cur ? ' sel' : '') + '" data-t="' + t.id + '"' +
         ' style="background:' + Shell.themeGradient(t.id) + '" title="' + t.name + '"></button>';
