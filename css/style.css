@@ -650,6 +650,25 @@ body[data-theme="aurora-green"] {
 .bk-item .btn { padding: 4px 12px; border-radius: 14px; font-size: 11px; flex: none; }
 .btn.danger { background: rgba(255,95,126,.16); border: 1px solid rgba(255,95,126,.35); }
 
+/* ================= 设置 ================= */
+.set-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 6px;
+  border-radius: 14px; cursor: pointer; transition: background .15s;
+}
+.set-item + .set-item { border-top: 1px solid rgba(255,255,255,.07); }
+.set-item:active { background: rgba(255,255,255,.06); }
+.set-ico {
+  width: 42px; height: 42px; border-radius: 13px; flex: 0 0 auto;
+  background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center;
+  font-size: 21px;
+}
+.set-main { flex: 1; min-width: 0; }
+.set-name { font-size: 14px; font-weight: 700; }
+.set-desc { font-size: 11.5px; color: rgba(255,255,255,.5); margin-top: 3px; }
+.set-go { font-size: 20px; color: rgba(255,255,255,.45); flex: 0 0 auto; }
+.set-strip { justify-content: flex-start; flex-wrap: wrap; margin: 2px; padding: 10px 4px 4px; border-top: 1px dashed rgba(255,255,255,.12); }
+.set-strip .theme-dot { width: 23px; height: 23px; }
+
 /* ================= 动画 ================= */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -890,3 +909,9 @@ body[data-theme="dream-white"] .place-card.sel { border-color:#e2a8d2; backgroun
 body[data-theme="dream-white"] .empty-tip { color:rgba(80,80,110,.5); }
 body[data-theme="dream-white"] .theme-dot { border-color:rgba(140,150,190,.45); }
 body[data-theme="dream-white"] .theme-prev { color:rgba(70,70,100,.9); }
+body[data-theme="dream-white"] .set-ico { background:rgba(185,195,225,.25); }
+body[data-theme="dream-white"] .set-desc { color:rgba(80,80,110,.6); }
+body[data-theme="dream-white"] .set-go { color:rgba(80,80,110,.5); }
+body[data-theme="dream-white"] .set-item + .set-item { border-top:1px solid rgba(140,150,190,.16); }
+body[data-theme="dream-white"] .set-strip { border-top:1px dashed rgba(140,150,190,.3); }
+body[data-theme="dream-white"] .panel-title { color:#3b3b51; }

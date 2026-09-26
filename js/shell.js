@@ -81,6 +81,7 @@ window.Shell = {
             var t = card.getAttribute('data-t');
             Store.set('theme', t);
             self.applyTheme();
+            document.dispatchEvent(new CustomEvent('themechange', { detail: { id: t } }));
             if (typeof self.renderThemeStrip === 'function') self.renderThemeStrip();
             b.querySelectorAll('.theme-prev').forEach(function (p) {
               p.textContent = p.parentNode.getAttribute('data-t') === t ? '✓' : '';
