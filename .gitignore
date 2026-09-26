@@ -1,0 +1,15 @@
+# Trae 本地预览缓存
+.trae-html-share-packages/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器/IDE
+.idea/
+.vscode/
+*.swp
+
+# 日志与临时文件
+*.log
+*.tmp
