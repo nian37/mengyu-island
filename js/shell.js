@@ -14,6 +14,7 @@ window.Shell = {
     this.refreshBadges();
     this.wireWallpaper();
     this.applyTheme();
+    this.applyCustomCss();
     this.applyWallpaper();
   },
 
@@ -116,6 +117,8 @@ window.Shell = {
     if (btn) btn.onclick = function () { Shell.wallpaperModal(); };
     var tb = document.getElementById('themeBtn');
     if (tb) tb.onclick = function () { Shell.themeModal(); };
+    var cb = document.getElementById('cssBtn');
+    if (cb) cb.onclick = function () { Shell.customCssModal(); };
   },
 
   applyWallpaper() {
@@ -148,6 +151,48 @@ window.Shell = {
           Shell.applyWallpaper();
           window.Modal.close();
           toast('已恢复默认壁纸');
+        };
+      }
+    });
+  },
+
+  /* ---------- 自定义 CSS ---------- */
+  applyCustomCss(css) {
+    if (css === undefined) css = Store.get('custom_css', '');
+    var el = document.getElementById('customStyle');
+    if (!el) {
+      el = document.createElement('style');
+      el.id = 'customStyle';
+      document.head.appendChild(el);
+    }
+    el.textContent = css || '';
+  },
+
+  customCssModal() {
+    var css = Store.get('custom_css', '');
+    window.Modal.show({
+      title: '🛠 自定义 CSS',
+      body: '<p class="muted sm center">粘贴自定义样式，实时预览、覆盖任意主题<br>例：<code>body[data-theme] { --bg-1:#101010; }</code></p>' +
+            '<textarea class="css-editor" id="cssEditor" spellcheck="false" placeholder="/* 在这里写你的自定义样式… */">' + esc(css) + '</textarea>',
+      footer: '<div class="modal-foot">' +
+        '<button class="btn primary" id="cssSave">💾 保存并应用</button>' +
+        '<button class="btn ghost" id="cssReset">恢复默认</button>' +
+        '<button class="btn ghost" data-m="cancel">关闭</button>' +
+      '</div>',
+      onMount: function (b, root) {
+        var ta = root.querySelector('#cssEditor');
+        ta.oninput = function () { Shell.applyCustomCss(ta.value); }; // 实时预览
+        root.querySelector('#cssSave').onclick = function () {
+          Store.set('custom_css', ta.value);
+          Shell.applyCustomCss();
+          window.Modal.close();
+          toast('自定义样式已保存 ✨');
+        };
+        root.querySelector('#cssReset').onclick = function () {
+          Store.set('custom_css', '');
+          Shell.applyCustomCss();
+          ta.value = '';
+          toast('已恢复默认样式');
         };
       }
     });
