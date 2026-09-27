@@ -38,7 +38,7 @@ window.DEFAULT_CARDS = [
 
   function msgs() { return Store.get(S_MSGS, []); }
   function saveMsgs(m) { Store.set(S_MSGS, m); }
-  function settings() { return Store.get(S_SET, { verifyOn: false, code: '', replyMin: 1, replyMax: 3 }); }
+  function settings() { return Store.get(S_SET, { verifyOn: false, code: '', replyMin: 1, replyMax: 3, readNoReply: false }); }
   function saveSettings(s) { Store.set(S_SET, s); }
   function cards() { return Store.get('cards', []); }
   function statuses() {
@@ -116,10 +116,12 @@ window.DEFAULT_CARDS = [
           (m.notes ? '<div class="qz-notes">' + esc(m.notes) + '</div>' : '') + '</div>';
       }
       if (m.from === 'user') {
-        return '<div class="msg user"><div class="msg-bubble user-b">' + bubbleFor(m) + '</div></div>';
+        return '<div class="msg user"><div class="msg-col right"><div class="msg-bubble user-b">' + bubbleFor(m) + '</div>' +
+          (m.read ? '<span class="msg-read">已读</span>' : '') + '</div></div>';
       }
       return '<div class="msg dream"><span class="mini-ava">' + avatarHTML(prof) + '</span>' +
-        '<div class="msg-bubble dream-b">' + bubbleFor(m) + '</div></div>';
+        '<div class="msg-col"><div class="msg-nick">' + esc(prof.nick || '梦角') + '</div>' +
+        '<div class="msg-bubble dream-b">' + bubbleFor(m) + '</div></div></div>';
     }).join('') || '<div class="chat-empty">还没有消息，给梦角写第一张字卡吧 💌</div>';
     box.scrollTop = box.scrollHeight;
     box.querySelectorAll('.qz-opt').forEach(function (b) {
@@ -134,6 +136,25 @@ window.DEFAULT_CARDS = [
         document.querySelector('.screen').appendChild(full);
       };
     });
+  }
+
+  /* “对方输入中”提示 */
+  function showTyping(body) {
+    var box = body.querySelector('#chatBody');
+    if (!box || box.querySelector('.typing')) return;
+    var prof = Store.get('profile', { dream: {} }).dream || {};
+    var el = document.createElement('div');
+    el.className = 'msg dream typing';
+    el.innerHTML = '<span class="mini-ava">' + avatarHTML(prof) + '</span>' +
+      '<div class="msg-col"><div class="msg-nick">对方输入中…</div>' +
+      '<div class="msg-bubble dream-b"><span class="typing-dots"><i></i><i></i><i></i></span></div></div>';
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function hideTyping(body) {
+    var el = body.querySelector('#chatBody .typing');
+    if (el) el.remove();
   }
 
   function addMsg(from, text, extra) {
@@ -152,49 +173,42 @@ window.DEFAULT_CARDS = [
   function wireSend(body) {
     var input = body.querySelector('#chatInput');
     var sendBtn = body.querySelector('#chatSend');
-    var mode = 'user';
-
-    body.querySelectorAll('.mode-btn').forEach(function (b) {
-      b.onclick = function () {
-        mode = b.getAttribute('data-mode');
-        body.querySelectorAll('.mode-btn').forEach(function (x) { x.classList.toggle('active', x === b); });
-        input.placeholder = mode === 'dream' ? '以梦角的名义说点什么…' : '给梦角发消息…';
-      };
-    });
-
-    var secBadge = body.querySelector('#lockMark');
 
     function doSend() {
       var text = input.value.trim();
       if (!text) return;
       input.value = '';
       var set = settings();
-      if (mode === 'user') {
+      if (set.readNoReply) {
+        /* 梦角已读不回：只标记已读，不回复 */
         addMsg('user', text);
         renderMsgs(body, msgs());
-        var reply = pickCard();
         setTimeout(function () {
-          if (set.verifyOn && set.code) {
-            askSecretCode(set).then(function (ok) {
-              if (ok) { addMsg('dream', reply); renderMsgs(body, msgs()); }
-              else { addMsg('sys', '⚠️ 暗号错误，梦角的字卡被拦截了'); renderMsgs(body, msgs()); }
-            });
-          } else {
-            addMsg('dream', reply);
-            renderMsgs(body, msgs());
+          var ms = msgs();
+          for (var i = ms.length - 1; i >= 0; i--) {
+            if (ms[i].from === 'user') { ms[i].read = true; break; }
           }
-        }, replyDelayMs());
-      } else {
+          saveMsgs(ms);
+          renderMsgs(body, msgs());
+        }, 800);
+        return;
+      }
+      addMsg('user', text);
+      renderMsgs(body, msgs());
+      showTyping(body);
+      var reply = pickCard();
+      setTimeout(function () {
+        hideTyping(body);
         if (set.verifyOn && set.code) {
-          askSecretCode(set).then(function (ok) {
-            if (ok) { addMsg('dream', text); renderMsgs(body, msgs()); }
-            else { addMsg('sys', '⚠️ 暗号错误，消息发送失败'); renderMsgs(body, msgs()); }
+          askDreamCode(set).then(function (ok) {
+            if (ok) { addMsg('dream', reply); renderMsgs(body, msgs()); }
+            else { addMsg('sys', '⚠️ 暗号错误，梦角的字卡被拦截了'); renderMsgs(body, msgs()); }
           });
         } else {
-          addMsg('dream', text);
+          addMsg('dream', reply);
           renderMsgs(body, msgs());
         }
-      }
+      }, replyDelayMs());
     }
 
     sendBtn.onclick = doSend;
@@ -214,7 +228,9 @@ window.DEFAULT_CARDS = [
     function onPick(dataUrl) {
       addMsg('user', '', { img: dataUrl });
       renderMsgs(body, msgs());
+      showTyping(body);
       setTimeout(function () {
+        hideTyping(body);
         addMsg('dream', IMG_REPLIES[Math.floor(Math.random() * IMG_REPLIES.length)]);
         renderMsgs(body, msgs());
       }, replyDelayMs());
@@ -227,7 +243,9 @@ window.DEFAULT_CARDS = [
     if (!curBody) return;
     addMsg('user', '送给你的礼物，要好好收着哦 🎁', { type: 'gift', item: item, emoji: emoji || '🎁', price: price || 0 });
     renderMsgs(curBody, msgs());
+    showTyping(curBody);
     setTimeout(function () {
+      hideTyping(curBody);
       var replies = [
         '收到你的礼物「' + item + '」啦！我会好好珍惜的 🥹',
         '哇，是「' + item + '」！梦角超喜欢，谢谢你 💕',
@@ -244,14 +262,18 @@ window.DEFAULT_CARDS = [
     if (dir === 'dream2user') {
       addMsg('dream', '给你的转账，收好哦', { type: 'transfer', amount: amt });
       renderMsgs(curBody, msgs());
+      showTyping(curBody);
       setTimeout(function () {
+        hideTyping(curBody);
         addMsg('user', '收到梦角的转账啦，' + Wallet.fmt(amt) + ' 已经到账 💕');
         renderMsgs(curBody, msgs());
       }, replyDelayMs());
     } else {
       addMsg('user', '给你转了零花钱，去买点好吃的吧', { type: 'transfer', amount: amt });
       renderMsgs(curBody, msgs());
+      showTyping(curBody);
       setTimeout(function () {
+        hideTyping(curBody);
         addMsg('dream', '收到转账啦，' + Wallet.fmt(amt) + ' 存进我的小金库了 💰 会好好用的！');
         renderMsgs(curBody, msgs());
       }, replyDelayMs());
@@ -293,9 +315,11 @@ window.DEFAULT_CARDS = [
     renderMsgs(body, list);
     addMsg('user', '「' + optText + '」');
     renderMsgs(body, msgs());
+    showTyping(body);
     var pool = m.from === 'guard' ? GUARD_REPLIES : QUIZ_REPLIES;
     var reply = pool[Math.floor(Math.random() * pool.length)].replace('{opt}', optText) + ' 🀄 ' + pickCard();
     setTimeout(function () {
+      hideTyping(body);
       addMsg('dream', reply);
       renderMsgs(body, msgs());
     }, replyDelayMs());
@@ -304,7 +328,9 @@ window.DEFAULT_CARDS = [
   function sendQuiz(body, q, opts, notes) {
     addMsg('quiz', q, { quiz: { opts: opts }, notes: notes || '' });
     renderMsgs(body, msgs());
+    showTyping(body);
     setTimeout(function () {
+      hideTyping(body);
       addMsg('dream', '给你出个小问卷～我等你的答案哦 ✨');
       renderMsgs(body, msgs());
     }, replyDelayMs());
@@ -363,9 +389,31 @@ window.DEFAULT_CARDS = [
 
   /* ================= 查岗 ================= */
   function sendGuard(body) {
-    addMsg('guard', '查岗！现在在做什么呢？', { quiz: { opts: GUARD_OPTS }, notes: '老实交代哦～梦角可都看着呢' });
-    Store.set('guard_last', Date.now());
-    renderMsgs(body, msgs());
+    showTyping(body);
+    setTimeout(function () {
+      hideTyping(body);
+      addMsg('guard', '查岗！现在在做什么呢？', { quiz: { opts: GUARD_OPTS }, notes: '老实交代哦～梦角可都看着呢' });
+      Store.set('guard_last', Date.now());
+      renderMsgs(body, msgs());
+    }, 900);
+  }
+
+  /* 梦角被动发送消息（点击 …… 按钮触发） */
+  function dreamSay(body) {
+    var set = settings();
+    showTyping(body);
+    setTimeout(function () {
+      hideTyping(body);
+      if (set.verifyOn && set.code) {
+        askDreamCode(set).then(function (ok) {
+          if (ok) { addMsg('dream', pickCard()); renderMsgs(body, msgs()); }
+          else { addMsg('sys', '⚠️ 暗号错误，梦角的字卡被拦截了'); renderMsgs(body, msgs()); }
+        });
+      } else {
+        addMsg('dream', pickCard());
+        renderMsgs(body, msgs());
+      }
+    }, replyDelayMs());
   }
 
   function maybeAutoGuard(body) {
@@ -383,9 +431,11 @@ window.DEFAULT_CARDS = [
       title: '聊天设置',
       body:
         '<label class="switch-row"><span>🔑 暗号验证</span><input type="checkbox" id="setVerify" ' + (set.verifyOn ? 'checked' : '') + '></label>' +
-        '<p class="muted sm">开启后，梦角发出的消息需要输入暗号才能成功送达，暗号由你自己设置。</p>' +
+        '<p class="muted sm">开启后，梦角发出的消息需要梦角先输入你设置的暗号才能送达。</p>' +
         '<input class="inp" id="setCode" type="password" placeholder="设置暗号（如：星光）" value="' + esc(set.code) + '">' +
         '<div class="sc-err" id="setErr" hidden>开启暗号验证时，请先设置暗号</div>' +
+        '<label class="switch-row"><span>🙈 梦角已读不回</span><input type="checkbox" id="setReadNoReply" ' + (set.readNoReply ? 'checked' : '') + '></label>' +
+        '<p class="muted sm">开启后，梦角会读到你发的文字消息（显示已读），但不会自动回复。</p>' +
         '<p class="field-label" style="margin-top:14px">💃 我的状态（梦女）</p>' +
         '<div class="status-row" id="stUserRow">' + USER_STATUS.map(function (s) {
           return '<button class="status-chip' + (s === st.user ? ' sel' : '') + '">' + s + '</button>';
@@ -424,6 +474,7 @@ window.DEFAULT_CARDS = [
           }
           var s = settings();
           s.verifyOn = verify; s.code = code;
+          s.readNoReply = b.querySelector('#setReadNoReply').checked;
           var mn = parseFloat(b.querySelector('#setRMin').value);
           var mx = parseFloat(b.querySelector('#setRMax').value);
           if (mn > 0) s.replyMin = mn;
@@ -435,7 +486,7 @@ window.DEFAULT_CARDS = [
           var mark = body.querySelector('#lockMark');
           if (mark) mark.hidden = !s.verifyOn;
           refreshHeadStatus(body);
-          toast(verify ? '暗号验证已开启' : '暗号验证已关闭');
+          toast('聊天设置已保存 ✨');
         };
         b.querySelector('#setBg').onclick = function () {
           window.Modal.close();
@@ -797,10 +848,7 @@ window.DEFAULT_CARDS = [
             '<button class="tool-btn" id="chatAlbum">🖼 相册</button>' +
             '<button class="tool-btn" id="chatQuiz">📋 问卷</button>' +
             '<button class="tool-btn" id="chatGuard">🚨 查岗</button>' +
-          '</div>' +
-          '<div class="chat-mode">' +
-            '<button class="mode-btn active" data-mode="user">我</button>' +
-            '<button class="mode-btn" data-mode="dream">梦角</button>' +
+            '<button class="tool-btn" id="chatDreamSay" title="梦角被动发送消息">……</button>' +
           '</div>' +
           '<div class="chat-inputrow">' +
             '<input class="inp" id="chatInput" placeholder="给梦角发消息…">' +
@@ -819,6 +867,7 @@ window.DEFAULT_CARDS = [
     body.querySelector('#chatAlbum').onclick = function () { sendImage(body, 'album'); };
     body.querySelector('#chatQuiz').onclick = function () { openQuiz(body); };
     body.querySelector('#chatGuard').onclick = function () { sendGuard(body); };
+    body.querySelector('#chatDreamSay').onclick = function () { dreamSay(body); };
     if (guardTimer) clearInterval(guardTimer);
     guardTimer = setInterval(function () { maybeAutoGuard(body); }, 30000);
   }

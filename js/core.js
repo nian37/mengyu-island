@@ -153,6 +153,32 @@ window.askSecretCode = function (setting) {
   });
 };
 
+/* 暗号验证由梦角输入：梦角要发消息时，需输入用户设置的暗号才能送达 */
+window.askDreamCode = function (setting) {
+  return new Promise(function (resolve) {
+    var input;
+    window.Modal.show({
+      title: '🔑 梦角验证暗号',
+      body: '<p class="muted sm" style="text-align:center">梦角想给你发消息，需要先输入你设置的暗号证明身份～<br>（帮梦角输入暗号吧）</p>' +
+            '<input class="inp" id="scInput" type="password" autocomplete="off" style="margin-top:10px">' +
+            '<div class="sc-err" id="scErr" hidden>暗号错误，梦角的消息被拦截了…</div>',
+      footer: '<div class="modal-foot"><button class="btn primary" data-m="ok">验证</button><button class="btn ghost" data-m="cancel">取消</button></div>',
+      onMount: function () { input = document.getElementById('scInput'); input.focus(); },
+      onOk: function () {
+        var v = input.value.trim();
+        if (v === setting.code) { window.Modal.close(); resolve(true); }
+        else {
+          var err = document.getElementById('scErr');
+          if (err) err.hidden = false;
+          input.classList.add('shake');
+          setTimeout(function () { input.classList.remove('shake'); }, 400);
+        }
+      },
+      onCancel: function () { window.Modal.close(); resolve(false); }
+    });
+  });
+};
+
 /* ================= 日历组件 ================= */
 window.Cal = {
   render(el, y, m, opts) {
