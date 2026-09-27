@@ -70,6 +70,14 @@ body[data-theme="aurora-green"] {
   --acc-1: #7ef0c0; --acc-2: #a3ffd9;
 }
 
+/* 图标边框与光晕跟随主题（暗色主题专属配色） */
+body[data-theme="pink-heart"] .app-ico { border:1.5px solid rgba(255,126,179,.38); box-shadow:0 8px 18px rgba(255,126,179,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-theme="purple-star"] .app-ico { border:1.5px solid rgba(161,140,209,.38); box-shadow:0 8px 18px rgba(161,140,209,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-theme="mint-fresh"] .app-ico { border:1.5px solid rgba(95,209,196,.38); box-shadow:0 8px 18px rgba(95,209,196,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-theme="ocean-blue"] .app-ico { border:1.5px solid rgba(111,184,255,.38); box-shadow:0 8px 18px rgba(111,184,255,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-theme="sunset-orange"] .app-ico { border:1.5px solid rgba(255,168,94,.38); box-shadow:0 8px 18px rgba(255,168,94,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+body[data-theme="aurora-green"] .app-ico { border:1.5px solid rgba(126,240,192,.38); box-shadow:0 8px 18px rgba(126,240,192,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+
 /* ================= 桌面与手机外壳 ================= */
 .desk {
   min-height: 100dvh; display: flex; padding: 18px;
@@ -132,14 +140,21 @@ body[data-theme="aurora-green"] {
   display: flex; align-items: center; justify-content: center; font-size: 27px;
   box-shadow: 0 8px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.25);
   transition: transform .15s ease;
+  isolation: isolate;
 }
 .app-ico:active { transform: scale(.9); }
+/* 图标表面叠加一层主题强调色染色，切主题时图标底色随之明显变化 */
+.app-ico::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, var(--acc-1, transparent), var(--acc-2, transparent));
+  mix-blend-mode: color; opacity: .5; pointer-events: none;
+}
 .app-name { font-size: 11px; color: rgba(255,255,255,.92); text-shadow: 0 1px 3px rgba(0,0,0,.5); }
 .badge {
   position: absolute; top: -5px; right: -6px; min-width: 18px; height: 18px; padding: 0 5px;
   background: linear-gradient(135deg, #ff5f7e, #ff2d55); border-radius: 10px;
   font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 6px rgba(255,45,85,.5); border: 1.5px solid #fff;
+  box-shadow: 0 2px 6px rgba(255,45,85,.5); border: 1.5px solid #fff; z-index: 1;
 }
 
 /* 陪伴小组件 */
@@ -243,7 +258,7 @@ body[data-theme="aurora-green"] {
 }
 .btn:active { transform: scale(.95); }
 .btn.primary { background: linear-gradient(135deg, var(--acc-1), var(--acc-2)); color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
-.btn.ghost { background: rgba(255,255,255,.08); }
+.btn.ghost { background: var(--chip-bg, rgba(255,255,255,.08)); color: var(--chip-fg, inherit); }
 .btn.small { padding: 6px 12px; font-size: 12px; border-radius: 10px; }
 .btn.big { width: 100%; padding: 12px; font-size: 15px; border-radius: 14px; }
 .inp {
@@ -878,6 +893,9 @@ body[data-theme="cloud-dream"] .statusbar { color:#3a3550; }
 body[data-theme="cloud-dream"] .home-clock .clock-time { color:#4a4460; background:none; -webkit-text-fill-color:#4a4460; text-shadow:0 2px 14px rgba(200,185,240,.5); }
 body[data-theme="cloud-dream"] .home-clock .clock-date { color:rgba(90,80,120,.72); }
 body[data-theme="cloud-dream"] .app-name { color:rgba(55,48,80,.92); text-shadow:none; }
+body[data-theme="cloud-dream"] .app-ico { border:1.5px solid rgba(190,170,230,.32); box-shadow:0 8px 18px rgba(190,170,230,.26), inset 0 1px 0 rgba(255,255,255,.65); }
+body[data-theme="cloud-dream"] .badge { border-color:#fdfaff; }
+body[data-theme="cloud-dream"] .theme-dot.sel { border-color:var(--acc-1); box-shadow:0 0 12px rgba(190,170,230,.6); }
 body[data-theme="cloud-dream"] .widget-companion { background:rgba(255,255,255,.66); border:1px solid rgba(190,170,230,.28); box-shadow:0 12px 30px rgba(190,170,230,.22); }
 body[data-theme="cloud-dream"] .widget-ava { background:rgba(200,180,235,.3); border-color:rgba(190,170,230,.3); }
 body[data-theme="cloud-dream"] .widget-name { color:#3a3550; }
@@ -924,6 +942,7 @@ body[data-theme="cloud-dream"] .prod-price, body[data-theme="cloud-dream"] .prod
 body[data-theme="cloud-dream"] .modal-card { background:rgba(254,252,255,.97); color:#3a3550; box-shadow:0 24px 60px rgba(190,170,230,.3); }
 body[data-theme="cloud-dream"] .modal-title { color:#3a3550; }
 body[data-theme="cloud-dream"] .btn.ghost { background:rgba(200,190,225,.22); color:#3a3550; }
+body[data-theme="cloud-dream"] .btn.danger { background:rgba(255,110,140,.13); border:1px solid rgba(255,110,140,.38); color:#c2496b; }
 body[data-theme="cloud-dream"] .place-card { background:rgba(255,255,255,.75); border-color:rgba(190,170,230,.2); color:#3a3550; }
 body[data-theme="cloud-dream"] .place-card.sel { border-color:#e2a8d2; background:rgba(255,220,242,.5); }
 body[data-theme="cloud-dream"] .empty-tip { color:rgba(90,80,120,.5); }
@@ -961,6 +980,9 @@ body[data-theme="dream-white"] .statusbar { color:#3b3b51; }
 body[data-theme="dream-white"] .home-clock .clock-time { color:#43435e; background:none; -webkit-text-fill-color:#43435e; text-shadow:0 2px 14px rgba(160,165,205,.5); }
 body[data-theme="dream-white"] .home-clock .clock-date { color:rgba(80,80,110,.72); }
 body[data-theme="dream-white"] .app-name { color:rgba(45,45,70,.92); text-shadow:none; }
+body[data-theme="dream-white"] .app-ico { border:1.5px solid rgba(140,150,190,.3); box-shadow:0 8px 18px rgba(140,150,190,.24), inset 0 1px 0 rgba(255,255,255,.65); }
+body[data-theme="dream-white"] .badge { border-color:#f8f8fc; }
+body[data-theme="dream-white"] .theme-dot.sel { border-color:var(--acc-1); box-shadow:0 0 12px rgba(140,150,190,.55); }
 body[data-theme="dream-white"] .widget-companion { background:rgba(255,255,255,.66); border:1px solid rgba(140,150,190,.25); box-shadow:0 12px 30px rgba(140,150,190,.22); }
 body[data-theme="dream-white"] .widget-ava { background:rgba(185,195,225,.3); border-color:rgba(140,150,190,.3); }
 body[data-theme="dream-white"] .widget-name { color:#3b3b51; }
@@ -1007,6 +1029,7 @@ body[data-theme="dream-white"] .prod-price, body[data-theme="dream-white"] .prod
 body[data-theme="dream-white"] .modal-card { background:rgba(252,252,255,.97); color:#3b3b51; box-shadow:0 24px 60px rgba(140,150,190,.3); }
 body[data-theme="dream-white"] .modal-title { color:#3b3b51; }
 body[data-theme="dream-white"] .btn.ghost { background:rgba(185,195,225,.22); color:#3b3b51; }
+body[data-theme="dream-white"] .btn.danger { background:rgba(255,110,140,.13); border:1px solid rgba(255,110,140,.38); color:#c2496b; }
 body[data-theme="dream-white"] .place-card { background:rgba(255,255,255,.75); border-color:rgba(140,150,190,.2); color:#3b3b51; }
 body[data-theme="dream-white"] .place-card.sel { border-color:#e2a8d2; background:rgba(255,220,242,.5); }
 body[data-theme="dream-white"] .empty-tip { color:rgba(80,80,110,.5); }
