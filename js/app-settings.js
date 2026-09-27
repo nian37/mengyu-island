@@ -8,7 +8,7 @@
   var currentBody = null;
   var syncTheme = function () {
     if (!currentBody) return;
-    var t = Store.get('theme', 'dream-white');
+    var t = Store.get('theme', 'cloud-dream');
     var desc = currentBody.querySelector('#setThemeDesc');
     if (desc) desc.textContent = '当前：' + themeName(t);
     currentBody.querySelectorAll('.theme-dot').forEach(function (x) {
@@ -24,7 +24,7 @@
     color: 'linear-gradient(135deg,#9aa0b8,#5f6b8c)',
     badge: function () { return 0; },
     render: function (body) {
-      var cur = Store.get('theme', 'dream-white');
+      var cur = Store.get('theme', 'cloud-dream');
       currentBody = body;
 
       body.innerHTML =

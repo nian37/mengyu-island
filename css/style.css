@@ -849,6 +849,90 @@ body { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
   .toast { bottom: calc(env(safe-area-inset-bottom, 0px) + 40px); }
 }
 
+/* ================= 主题：云朵星梦 Soft-Kawaii（默认主题） ================= */
+body[data-theme="cloud-dream"] {
+  --bg-1:#fdfaff; --bg-2:#f4effa; --bg-3:#e9e2f5;
+  --hbg-1:#f7f3fb; --hbg-2:#efe8f7; --hbg-3:#e5ddf2;
+  --avbg-1:#f2edf9; --avbg-2:#fdfbff;
+  --glow-a:rgba(214,196,255,.6); --glow-b:rgba(255,218,240,.55);
+  --chip-bg:rgba(200,190,225,.24); --chip-bg-2:rgba(200,190,225,.38); --chip-fg:rgba(88,80,120,.72);
+  --acc-1:#c3a6ec; --acc-2:#e6b8dd;
+  --wp-ov:rgba(253,250,255,.12);
+  color:#3a3550;
+}
+body[data-theme="cloud-dream"] .muted { color:rgba(90,80,120,.62); }
+body[data-theme="cloud-dream"] .desk {
+  background-image:
+    radial-gradient(1.5px 1.5px at 18% 20%, rgba(190,170,230,.9), transparent 60%),
+    radial-gradient(2px 2px at 75% 14%, rgba(240,190,225,.8), transparent 60%),
+    radial-gradient(1px 1px at 55% 40%, rgba(190,170,230,.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 30% 62%, rgba(240,190,225,.75), transparent 60%),
+    radial-gradient(2px 2px at 85% 55%, rgba(190,170,230,.8), transparent 60%),
+    radial-gradient(1px 1px at 65% 82%, rgba(240,190,225,.7), transparent 60%),
+    linear-gradient(165deg, #ffffff 0%, #f5f0fc 50%, #e8e0f6 100%);
+}
+body[data-theme="cloud-dream"] .desk::before { background:var(--glow-a); }
+body[data-theme="cloud-dream"] .desk::after { background:var(--glow-b); }
+body[data-theme="cloud-dream"] .desk-note { color:rgba(90,80,120,.5); }
+body[data-theme="cloud-dream"] .statusbar { color:#3a3550; }
+body[data-theme="cloud-dream"] .home-clock .clock-time { color:#4a4460; background:none; -webkit-text-fill-color:#4a4460; text-shadow:0 2px 14px rgba(200,185,240,.5); }
+body[data-theme="cloud-dream"] .home-clock .clock-date { color:rgba(90,80,120,.72); }
+body[data-theme="cloud-dream"] .app-name { color:rgba(55,48,80,.92); text-shadow:none; }
+body[data-theme="cloud-dream"] .widget-companion { background:rgba(255,255,255,.66); border:1px solid rgba(190,170,230,.28); box-shadow:0 12px 30px rgba(190,170,230,.22); }
+body[data-theme="cloud-dream"] .widget-ava { background:rgba(200,180,235,.3); border-color:rgba(190,170,230,.3); }
+body[data-theme="cloud-dream"] .widget-name { color:#3a3550; }
+body[data-theme="cloud-dream"] .widget-line { color:rgba(90,80,120,.68); }
+body[data-theme="cloud-dream"] .widget-go { color:rgba(90,80,120,.6); }
+body[data-theme="cloud-dream"] .wall-btn { background:rgba(255,255,255,.6); border:1px solid rgba(190,170,230,.28); color:#3a3550; box-shadow:0 4px 12px rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .appbar { background:rgba(253,250,255,.78); border-bottom:1px solid rgba(190,170,230,.15); }
+body[data-theme="cloud-dream"] .appbar-back, body[data-theme="cloud-dream"] .appbar-title { color:#3a3550; }
+body[data-theme="cloud-dream"] .appbody { color:#3a3550; }
+body[data-theme="cloud-dream"] .field-label { color:rgba(90,80,120,.62); }
+body[data-theme="cloud-dream"] .inp { background:rgba(255,255,255,.85); color:#3a3550; border-color:rgba(190,170,230,.28); }
+body[data-theme="cloud-dream"] .inp::placeholder { color:rgba(100,90,135,.45); }
+body[data-theme="cloud-dream"] .panel, body[data-theme="cloud-dream"] .card { background:rgba(255,255,255,.72); border-color:rgba(190,170,230,.18); color:#3a3550; box-shadow:0 10px 24px rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .tabs { background:rgba(200,190,225,.22); }
+body[data-theme="cloud-dream"] .tab-btn { color:rgba(88,80,120,.6); }
+body[data-theme="cloud-dream"] .tab-btn.active, body[data-theme="cloud-dream"] .btn.primary, body[data-theme="cloud-dream"] .cat-chip.sel, body[data-theme="cloud-dream"] .qty-btn.add {
+  background:linear-gradient(135deg,#c9a8ee,#ecbede); color:#fff;
+  box-shadow:0 6px 16px rgba(200,160,235,.35);
+}
+body[data-theme="cloud-dream"] .chip, body[data-theme="cloud-dream"] .mood, body[data-theme="cloud-dream"] .emoji-it, body[data-theme="cloud-dream"] .cat-chip, body[data-theme="cloud-dream"] .qty-btn { background:rgba(200,190,225,.2); color:#3a3550; }
+body[data-theme="cloud-dream"] .chat-head { color:#3a3550; }
+body[data-theme="cloud-dream"] .chat-foot { border-top:1px solid rgba(190,170,230,.15); background:rgba(253,251,255,.9); }
+body[data-theme="cloud-dream"] .dream-b { background:rgba(255,255,255,.85); border:1px solid rgba(190,170,230,.2); }
+body[data-theme="cloud-dream"] .msg-time { color:inherit; }
+body[data-theme="cloud-dream"] .chat-empty { color:rgba(90,80,120,.5); }
+body[data-theme="cloud-dream"] .g-bubble { background:rgba(255,255,255,.85); color:#3a3550; }
+body[data-theme="cloud-dream"] .react-item .g-bubble { background:rgba(200,190,225,.2); }
+body[data-theme="cloud-dream"] .prod-card { background:rgba(255,255,255,.72); border:1px solid rgba(190,170,230,.16); box-shadow:0 10px 24px rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .prod-ico { background:rgba(200,190,225,.25); }
+body[data-theme="cloud-dream"] .prod-name { color:#3a3550; }
+body[data-theme="cloud-dream"] .shop-card { background:rgba(255,255,255,.72); border:1px solid rgba(190,170,230,.16); box-shadow:0 10px 24px rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .shop-name { color:#3a3550; }
+body[data-theme="cloud-dream"] .shop-tag, body[data-theme="cloud-dream"] .shop-meta, body[data-theme="cloud-dream"] .shop-desc { color:rgba(90,80,120,.68); }
+body[data-theme="cloud-dream"] .shop-go { color:rgba(90,80,120,.6); }
+body[data-theme="cloud-dream"] .menu-item { background:rgba(255,255,255,.72); border:1px solid rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .pur-item { background:rgba(255,255,255,.72); border-color:rgba(190,170,230,.16); }
+body[data-theme="cloud-dream"] .pur-sub { color:rgba(90,80,120,.6); }
+body[data-theme="cloud-dream"] .pur-time { color:rgba(90,80,120,.45); }
+body[data-theme="cloud-dream"] .order-row { color:rgba(65,58,95,.85); }
+body[data-theme="cloud-dream"] .order-row.total { border-top:1px dashed rgba(190,170,230,.35); }
+body[data-theme="cloud-dream"] .cartbar { background:rgba(255,255,255,.92); border-color:rgba(190,170,230,.22); box-shadow:0 12px 30px rgba(190,170,230,.28); color:#3a3550; }
+body[data-theme="cloud-dream"] .qty-num { color:#3a3550; }
+body[data-theme="cloud-dream"] .prod-price, body[data-theme="cloud-dream"] .prod-detail-price, body[data-theme="cloud-dream"] .pur-price, body[data-theme="cloud-dream"] .menu-price, body[data-theme="cloud-dream"] .gift-price { color:#c1973a; }
+body[data-theme="cloud-dream"] .modal-card { background:rgba(254,252,255,.97); color:#3a3550; box-shadow:0 24px 60px rgba(190,170,230,.3); }
+body[data-theme="cloud-dream"] .modal-title { color:#3a3550; }
+body[data-theme="cloud-dream"] .btn.ghost { background:rgba(200,190,225,.22); color:#3a3550; }
+body[data-theme="cloud-dream"] .place-card { background:rgba(255,255,255,.75); border-color:rgba(190,170,230,.2); color:#3a3550; }
+body[data-theme="cloud-dream"] .place-card.sel { border-color:#e2a8d2; background:rgba(255,220,242,.5); }
+body[data-theme="cloud-dream"] .empty-tip { color:rgba(90,80,120,.5); }
+body[data-theme="cloud-dream"] .theme-dot { border-color:rgba(190,170,230,.45); }
+body[data-theme="cloud-dream"] .theme-prev { color:rgba(88,80,120,.9); }
+body[data-theme="cloud-dream"] .set-ico { background:rgba(200,190,225,.25); }
+body[data-theme="cloud-dream"] .set-desc { color:rgba(90,80,120,.6); }
+body[data-theme="cloud-dream"] .set-go { color:rgba(90,80,120,.5); }
+
 /* ================= 主题：梦境灰白 Dreamcore（默认主题） ================= */
 body[data-theme="dream-white"] {
   --bg-1:#f8f8fc; --bg-2:#eef0f7; --bg-3:#e1e4ef;
@@ -857,6 +941,7 @@ body[data-theme="dream-white"] {
   --glow-a:rgba(200,215,255,.55); --glow-b:rgba(255,215,240,.5);
   --chip-bg:rgba(185,195,225,.22); --chip-bg-2:rgba(185,195,225,.34); --chip-fg:rgba(70,70,100,.68);
   --acc-1:#8b95c9; --acc-2:#aab4e4;
+  --wp-ov:rgba(248,249,252,.18);
   color:#3b3b51;
 }
 body[data-theme="dream-white"] .muted { color:rgba(80,80,110,.62); }
